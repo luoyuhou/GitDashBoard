@@ -1,0 +1,19 @@
+{
+  "name": "gitdashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "koa": "^2.13.0",
+    "koa-router": "^10.0.0",
+    "shelljs": "^0.8.4",
+    "winston": "^3.3.3"
+  }
+}
