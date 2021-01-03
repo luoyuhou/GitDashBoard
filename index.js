@@ -1,17 +1,27 @@
 import Koa from 'koa';
-import Router from 'koa-router';
-import config from './common/config'
+import bodyParser from 'koa-bodyparser';
+import moment from 'moment';
+import path from 'path';
+import './common/config'
+import router from './routers/router';
 import Logger from "./common/logger";
 
+const cors = require('koa2-cors');
 
 const app = new Koa();
-const router = Router();
-const logger = Logger({transports: { filename: './runtime/service.log', level: 'info'}});
+app.use(cors());
+
+const staticFiles = require('koa-static');
+app.use(staticFiles(path.join(__dirname , 'static')));
+
+const logger = Logger({transports: { filename: './runtime/logs/service.log', level: 'info'}});
+const { SERVER_PORT: port, SOCKET_PORT: socket_port } = process.env;
+app.use(bodyParser());
 
 app.use(async (ctx, next) => {
     await next();
     const rt = ctx.response.get('X-Response-Time');
-    console.log(`${ctx.method} ${ctx.url} - ${rt}`);
+    logger.info(`[${moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss.SSS')}] ${ctx.method} ${ctx.url} - ${rt}`)
 });
 
 // x-response-time
@@ -25,9 +35,4 @@ app.use(async (ctx, next) => {
 
 app.use(router.routes());
 
-app.use(async ctx => {
-    ctx.status = 200;
-    ctx.body = 'cmd'
-})
-
-app.listen(3000, logger.info('running: http://localhost:3000'))
+app.listen(port, logger.info(`[${moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss.SSS")}] running: http://localhost:${port}`));

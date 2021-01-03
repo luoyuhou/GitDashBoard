@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>git</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        html, body {
+            width: 98%;
+            margin: 0 auto;
+        }
+        .tab-item, .tab-log {
+            display: none;
+        }
+        .tab-item.active, .tab-log.active {
+            display: block !important;
+        }
+    </style>
+    <link rel="stylesheet" href="./plugins/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="./plugins/bootstrap-select-1.13.9/dist/css/bootstrap-select.css">
+</head>
+<body>
+<div class="panel">
+    <h2>{{data}}</h2>
+    <div class="input-group" style="margin-bottom: 5px;">
+        <span class="input-group-addon" id="sizing-addon2">Path：</span>
+        <input id="path" type="text" class="form-control" placeholder="path" aria-describedby="sizing-addon2">
+    </div>
+    <div class="bs-example" data-example-id="simple-nav-tabs">
+        <!-- 导航 -->
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a href="#branch" aria-controls="branch" role="tab" data-toggle="tab">Branch</a>
+            </li>
+            <li role="presentation">
+                <a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a>
+            </li>
+            <li role="presentation">
+                <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a>
+            </li>
+            <li role="presentation">
+                <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a>
+            </li>
+        </ul>
+
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="branch">
+                <div id="tabs" class="list-group col-md-2 col-xs-2">
+                    <!--tab里面的值应与下面标签页的id一致-->
+                    <a tab="tab-item1" href="#" class="tab list-group-item active">local</a>
+                    <a tab="tab-item2" href="#" class="tab list-group-item">remote</a>
+                    <a tab="tab-item3" href="#" class="tab list-group-item">create branch</a>
+                    <a tab="tab-item4" href="#" class="tab list-group-item">checkout branch</a>
+                </div>
+                <div class="col-md-10 col-xs-10">
+                    <!--id与上面标签里面的tab一致-->
+                    <div id="tab-item1" class="tab-item active">
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git log', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <div class="response"><pre></pre></div>
+                    </div>
+                    <div id="tab-item2" class="tab-item">
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git branch -a', 2)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <div class="response"><pre></pre></div>
+                    </div>
+                    <div id="tab-item3" class="tab-item">
+                        <div class="input-group">
+                            <input type="text" id="create_branch" class="form-control" aria-label="Text input with segmented button dropdown">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" onclick="createOrRemoveBranch()">Action</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="type">Create</span>
+                                    <span class="caret"></span>
+                                    <!--<span class="sr-only">Toggle Dropdown</span>-->
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="#" onclick="changeType('Create')">create</a></li>
+                                    <li><a href="#" onclick="changeType('Remove')">remove</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="response"><pre></pre></div>
+                    </div>
+                    <div id="tab-item4" class="tab-item">
+                        <span>From：</span>
+                        <select class="selectpicker" data-live-search="true" id="origin" disabled></select>
+                        <span style="margin-left: 50px;">To：</span>
+                        <select class="selectpicker" data-live-search="true" id="target"></select>
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="getLocalBranch()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" aria-label="Left Align" style="float: right;" onclick="checkout()"><span class="glyphicon glyphicon-play-circle" aria-hidden="true">Action</span></button>
+                        <div class="response" style="margin-top: 5px;"><pre></pre></div>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="log">
+                <div id="logs" class="list-group col-md-2 col-xs-2">
+                    <!--tab里面的值应与下面标签页的id一致-->
+                    <a tab="tab-log1" href="#" class="tab list-group-item active">log</a>
+                    <a tab="tab-log2" href="#" class="tab list-group-item">oneline | pretty | graph</a>
+                    <a tab="tab-log3" href="#" class="tab list-group-item">stat</a>
+                    <a tab="tab-log4" href="#" class="tab list-group-item">reflog</a>
+                </div>
+                <div class="col-md-10 col-xs-10">
+                    <!--id与上面标签里面的tab一致-->
+                    <div id="tab-log1" class="tab-log active">
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git branch', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <div class="response"><pre></pre></div>
+                    </div>
+                    <div id="tab-log2" class="tab-log">
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git branch -a', 2)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <div class="response"><pre></pre></div>
+                    </div>
+                    <div id="tab-log3" class="tab-log">
+                        <div class="input-group">
+                            <input type="text" id="create_branch" class="form-control" aria-label="Text input with segmented button dropdown">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" onclick="createOrRemoveBranch()">Action</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="type">Create</span>
+                                    <span class="caret"></span>
+                                    <!--<span class="sr-only">Toggle Dropdown</span>-->
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="#" onclick="changeType('Create')">create</a></li>
+                                    <li><a href="#" onclick="changeType('Remove')">remove</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="response"><pre></pre></div>
+                    </div>
+                    <div id="tab-log4" class="tab-log">
+                        <span>From：</span>
+                        <select class="selectpicker" data-live-search="true" id="origin" disabled></select>
+                        <span style="margin-left: 50px;">To：</span>
+                        <select class="selectpicker" data-live-search="true" id="target"></select>
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="getLocalBranch()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" aria-label="Left Align" style="float: right;" onclick="checkout()"><span class="glyphicon glyphicon-play-circle" aria-hidden="true">Action</span></button>
+                        <div class="response" style="margin-top: 5px;"><pre></pre></div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="messages">
+                <div>
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </form>
+
+                    <div id="display"></div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="settings">4</div>
+        </div>
+    </div>
+</div>
+
+<script src="./js/jquery.3.3.1.js"></script>
+<script src="./plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
+<script src="./plugins/bootstrap-select-1.13.9/dist/js/bootstrap-select.js"></script>
+<script>
+  async function exec(cmd) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '',
+        type: 'POST',
+        data: {
+          path: $('#path').val(),
+          cmd
+        },
+        success: (res) => {
+          resolve(res);
+        }
+      })
+    });
+  }
+
+  //事件委托给父级div来处理
+  $(document).ready(function () {
+    $("#logs").on("click", "a", function (event) {
+      let target = $(event.target);
+      $(".tab-log").removeClass('active');
+      $(".tab").removeClass("active");
+      //添加css样式
+      target.addClass("active");
+      //取自定义字段里面的值(即a标签里面的tab字段)
+      //tab字段里面存的是各个标签页的id, 以此来控制显示和隐藏
+      $("#" + target.attr("tab")).addClass('active');
+    });
+  });
+
+  function log(cmd, type) {
+    exec(cmd).then(res => {
+      if (res) {
+        const body = $(`#tab-log${type} div.response`);
+        body.empty();
+        body.append(`<pre>${res}</pre>`);
+      }
+    });
+  }
+
+
+</script>
+</body>
+</html>
