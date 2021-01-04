@@ -57,7 +57,7 @@
                 <div class="col-md-10 col-xs-10">
                     <!--id与上面标签里面的tab一致-->
                     <div id="tab-item1" class="tab-item active">
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git log', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git branch', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
                         <div class="response"><pre></pre></div>
                     </div>
                     <div id="tab-item2" class="tab-item">
@@ -98,18 +98,18 @@
                 <div id="logs" class="list-group col-md-2 col-xs-2">
                     <!--tab里面的值应与下面标签页的id一致-->
                     <a tab="tab-log1" href="#" class="tab list-group-item active">log</a>
-                    <a tab="tab-log2" href="#" class="tab list-group-item">oneline | pretty | graph</a>
+                    <a tab="tab-log2" href="#" class="tab list-group-item">oneline | pretty | graph | Author | branch</a>
                     <a tab="tab-log3" href="#" class="tab list-group-item">stat</a>
                     <a tab="tab-log4" href="#" class="tab list-group-item">reflog</a>
                 </div>
                 <div class="col-md-10 col-xs-10">
                     <!--id与上面标签里面的tab一致-->
                     <div id="tab-log1" class="tab-log active">
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git branch', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="log('git log', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
                         <div class="response"><pre></pre></div>
                     </div>
                     <div id="tab-log2" class="tab-log">
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="branch('git branch -a', 2)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="log('git branch -a', 2)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
                         <div class="response"><pre></pre></div>
                     </div>
                     <div id="tab-log3" class="tab-log">
@@ -163,6 +163,7 @@
 <script src="./js/jquery.3.3.1.js"></script>
 <script src="./plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
 <script src="./plugins/bootstrap-select-1.13.9/dist/js/bootstrap-select.js"></script>
+<script src="./js/branch.js"></script>
 <script>
   async function exec(cmd) {
     return new Promise((resolve, reject) => {
