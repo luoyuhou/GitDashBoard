@@ -59,6 +59,10 @@ function branch(cmd, type) {
     if (res) {
       const body = $(`#tab-item${type} div.response`);
       body.empty();
+      if (type === 2) {
+        const arr = res.split('\n').filter((value) => value.includes('remote'));
+        res = arr.join('\n');
+      }
       body.append(`<pre>${res}</pre>`);
     }
   });

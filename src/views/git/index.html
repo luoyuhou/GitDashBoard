@@ -16,9 +16,21 @@
         .tab-item.active, .tab-log.active {
             display: block !important;
         }
+        .item {
+            margin-right: 10px;
+            display: inline-block;
+            margin-bottom: 2px;
+        }
+        .seperator:after {
+            padding-left: 10px;
+            content: '|';
+            color: orangered;
+        }
     </style>
     <link rel="stylesheet" href="./plugins/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="./plugins/bootstrap-select-1.13.9/dist/css/bootstrap-select.css">
+    <link rel="stylesheet" href="./plugins/bootstrap-switch-4.0.0-alpha/bootstrap-switch.css">
+    <link rel="stylesheet" href="./plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
 </head>
 <body>
 <div class="panel">
@@ -83,11 +95,11 @@
                         <div class="response"><pre></pre></div>
                     </div>
                     <div id="tab-item4" class="tab-item">
-                        <span>From：</span>
+                        <label for="origin">From：</label>
                         <select class="selectpicker" data-live-search="true" id="origin" disabled></select>
-                        <span style="margin-left: 50px;">To：</span>
+                        <label for="target" style="margin-left: 50px;">To：</label>
                         <select class="selectpicker" data-live-search="true" id="target"></select>
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="getLocalBranch()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="getLocalBranch()"><span class="glyphicon glyphicon-refresh" aria-hidden="true">branch</span></button>
                         <button type="button" class="btn btn-default" aria-label="Left Align" style="float: right;" onclick="checkout()"><span class="glyphicon glyphicon-play-circle" aria-hidden="true">Action</span></button>
                         <div class="response" style="margin-top: 5px;"><pre></pre></div>
                     </div>
@@ -98,46 +110,67 @@
                 <div id="logs" class="list-group col-md-2 col-xs-2">
                     <!--tab里面的值应与下面标签页的id一致-->
                     <a tab="tab-log1" href="#" class="tab list-group-item active">log</a>
-                    <a tab="tab-log2" href="#" class="tab list-group-item">oneline | pretty | graph | Author | branch</a>
-                    <a tab="tab-log3" href="#" class="tab list-group-item">stat</a>
-                    <a tab="tab-log4" href="#" class="tab list-group-item">reflog</a>
+                    <a tab="tab-log2" href="#" class="tab list-group-item">reflog</a>
                 </div>
                 <div class="col-md-10 col-xs-10">
                     <!--id与上面标签里面的tab一致-->
                     <div id="tab-log1" class="tab-log active">
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="log('git log', 1)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                        <div class="response"><pre></pre></div>
-                    </div>
-                    <div id="tab-log2" class="tab-log">
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="log('git branch -a', 2)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                        <div class="response"><pre></pre></div>
-                    </div>
-                    <div id="tab-log3" class="tab-log">
-                        <div class="input-group">
-                            <input type="text" id="create_branch" class="form-control" aria-label="Text input with segmented button dropdown">
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default" onclick="createOrRemoveBranch()">Action</button>
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span id="type">Create</span>
-                                    <span class="caret"></span>
-                                    <!--<span class="sr-only">Toggle Dropdown</span>-->
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#" onclick="changeType('Create')">create</a></li>
-                                    <li><a href="#" onclick="changeType('Remove')">remove</a></li>
-                                </ul>
+                        <div class="input-group" style="margin: 5px 0;">
+                            <div class="item seperator">
+                                <label for="oneline">oneline:</label>
+                                <input id="oneline" type="checkbox" name="oneline" data-size="mini">
+                            </div>
+                            <div class="item seperator">
+                                <label for="pretty">pretty:</label>
+                                <input id="pretty" type="checkbox" name="pretty" data-size="mini">
+                            </div>
+                            <div class="item seperator">
+                                <label for="graph">graph:</label>
+                                <input id="graph" type="checkbox" name="graph" data-size="mini">
+                            </div>
+                            <div class="item seperator">
+                                <label for="stat">stat:</label>
+                                <input id="stat" type="checkbox" name="stat" data-size="mini">
+                            </div>
+                            <div class="item" style="vertical-align: middle;">
+                                <label for="branch_log">Branch:</label>
+                                <select class="selectpicker" data-live-search="true" id="branch_log"></select>
+                            </div>
+                            <span style="margin-right: 10px; color: orangered;">|</span>
+                            <div class="item" style="vertical-align: middle; width: 150px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" >commit:</span>
+                                    <input id="commit" type="number" min="1" class="form-control" placeholder="commit" aria-describedby="sizing-addon2">
+                                </div>
+                            </div>
+                            <div class="item" style="vertical-align: middle;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" >Author:</span>
+                                    <input id="author" type="text" class="form-control" placeholder="author" aria-describedby="sizing-addon2">
+                                </div>
+                            </div>
+                            <div class="item" style="vertical-align: middle;;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" >start time:</span>
+                                    <input id="since" type="text" class="form-control datetime" placeholder="start datetime" aria-describedby="sizing-addon2">
+                                </div>
+                            </div>
+                            <div class="item" style="vertical-align: middle;;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" >end time:</span>
+                                    <input id="until" type="text" class="form-control datetime" placeholder="end datetime" aria-describedby="sizing-addon2">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <button type="button" class="btn btn-default" aria-label="Left Align" onclick="log_v2()"><span class="glyphicon glyphicon-play-circle" aria-hidden="true">Action</span></button>
+                                <button type="button" class="btn btn-default" onclick="getLocalBranchToLog()"><span class="glyphicon glyphicon-refresh" aria-hidden="true">branch</span></button>
                             </div>
                         </div>
                         <div class="response"><pre></pre></div>
                     </div>
-                    <div id="tab-log4" class="tab-log">
-                        <span>From：</span>
-                        <select class="selectpicker" data-live-search="true" id="origin" disabled></select>
-                        <span style="margin-left: 50px;">To：</span>
-                        <select class="selectpicker" data-live-search="true" id="target"></select>
-                        <button type="button" class="btn btn-default" style="float: right;" onclick="getLocalBranch()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                        <button type="button" class="btn btn-default" aria-label="Left Align" style="float: right;" onclick="checkout()"><span class="glyphicon glyphicon-play-circle" aria-hidden="true">Action</span></button>
-                        <div class="response" style="margin-top: 5px;"><pre></pre></div>
+                    <div id="tab-log2" class="tab-log">
+                        <button type="button" class="btn btn-default" style="float: right;" onclick="log('git reflog', 2)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                        <div class="response"><pre></pre></div>
                     </div>
                 </div>
             </div>
@@ -163,7 +196,10 @@
 <script src="./js/jquery.3.3.1.js"></script>
 <script src="./plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
 <script src="./plugins/bootstrap-select-1.13.9/dist/js/bootstrap-select.js"></script>
+<script src="./plugins/bootstrap-switch-4.0.0-alpha/bootstrap-switch.js"></script>
+<script src="./plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="./js/branch.js"></script>
+<script src="./js/log.js"></script>
 <script>
   async function exec(cmd) {
     return new Promise((resolve, reject) => {
@@ -181,29 +217,26 @@
     });
   }
 
-  //事件委托给父级div来处理
-  $(document).ready(function () {
-    $("#logs").on("click", "a", function (event) {
-      let target = $(event.target);
-      $(".tab-log").removeClass('active');
-      $(".tab").removeClass("active");
-      //添加css样式
-      target.addClass("active");
-      //取自定义字段里面的值(即a标签里面的tab字段)
-      //tab字段里面存的是各个标签页的id, 以此来控制显示和隐藏
-      $("#" + target.attr("tab")).addClass('active');
-    });
-  });
+  // switch
+  $('[name="oneline"]').bootstrapSwitch();
+  $('[name="pretty"]').bootstrapSwitch();
+  $('[name="graph"]').bootstrapSwitch();
+  $('[name="stat"]').bootstrapSwitch();
 
-  function log(cmd, type) {
-    exec(cmd).then(res => {
-      if (res) {
-        const body = $(`#tab-log${type} div.response`);
-        body.empty();
-        body.append(`<pre>${res}</pre>`);
-      }
-    });
-  }
+  // datepicker
+  $('input.datetime').datetimepicker({
+    language: 'zh-CN',
+    weekStart: 1,
+    todayBtn: 1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    minuteStep: 1,
+    maxView: 4,
+    minView: 0,
+    forceParse: 0,
+    format: 'yyyy-mm-dd hh:ii:ss'
+  });
 
 
 </script>
