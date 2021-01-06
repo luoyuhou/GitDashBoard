@@ -10,6 +10,9 @@
             width: 98%;
             margin: 0 auto;
         }
+        html::-webkit-scrollbar {
+            display: none;
+        }
         .tab-item, .tab-log {
             display: none;
         }
@@ -49,7 +52,7 @@
                 <a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a>
             </li>
             <li role="presentation">
-                <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a>
+                <a href="#cmd" aria-controls="cmd" role="tab" data-toggle="tab">CMD</a>
             </li>
             <li role="presentation">
                 <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a>
@@ -174,19 +177,21 @@
                     </div>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane fade" id="messages">
-                <div>
-                    <form>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">Go!</button>
-                            </span>
-                        </div>
-                    </form>
 
-                    <div id="display"></div>
+            <div role="tabpanel" class="tab-pane fade" id="cmd">
+                <div class="item" style="vertical-align: middle;">
+                    <div class="input-group">
+                        <label for="history" class="input-group-addon">History:</label>
+                        <select class="selectpicker" data-live-search="true" id="history" onchange="selectOnChange(this)"></select>
+                    </div>
                 </div>
+                <div class="input-group">
+                    <input id="command" type="text" class="form-control" placeholder="please put...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="clear_cmd()">Clear!</button>
+                    </span>
+                </div>
+                <div class="response"><pre></pre></div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="settings">4</div>
         </div>
@@ -200,6 +205,7 @@
 <script src="./plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="./js/branch.js"></script>
 <script src="./js/log.js"></script>
+<script src="./js/cmd.js"></script>
 <script>
   async function exec(cmd) {
     return new Promise((resolve, reject) => {
